@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Consulta de Inventario</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        input, button { padding: 10px; margin: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Consulta de Inventario</h1>
+    <input type="text" id="codigo" placeholder="Ingrese el código del producto">
+    <button onclick="consultarProducto()">Consultar</button>
+    <p id="resultado"></p>
+
+    <script>
+        function consultarProducto() {
+            var codigo = document.getElementById('codigo').value;
+            google.script.run.withSuccessHandler(function(response) {
+                document.getElementById('resultado').textContent = "Producto: " + response.nombre + ", Precio: $" + response.precio;
+            }).buscarProducto(codigo);
+        }
+    </script>
+</body>
+</html>
