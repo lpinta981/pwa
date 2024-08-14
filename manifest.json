@@ -1,7 +1,7 @@
 {
     "name": "Consulta de Inventario",
     "short_name": "Inventario",
-    "start_url": "/index.html",
+    "start_url": "/pwa/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#007bff",
