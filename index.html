@@ -4,18 +4,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <meta name="theme-color" content="#007bff">
-    <link rel="manifest" href="/pwa/manifest.json">  <!-- Ajusta la ruta aquí -->
+    <link rel="manifest" href="/pwa/manifest.json">
     <title>Consulta de Inventario</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
         input, button { padding: 10px; margin: 10px; font-size: 18px; }
+        #lector-codigo { margin-top: 20px; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
 </head>
 
 <body>
     <h1>Consulta de Inventario</h1>
     <input type="text" id="codigo" placeholder="Ingrese el código del producto">
     <button onclick="consultarProducto()">Consultar</button>
+    <button onclick="iniciarEscaneo()">Escanear Código de Barras</button>
+    <div id="lector-codigo" style="width: 300px; height: 200px; border: 1px solid black;"></div>
     <p id="resultado"></p>
 
     <script>
@@ -34,8 +38,39 @@
                 });
         }
 
+        function iniciarEscaneo() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#lector-codigo'), // El div donde se mostrará el video
+                    constraints: {
+                        width: 300,
+                        height: 200,
+                        facingMode: "environment" // Utiliza la cámara trasera
+                    },
+                },
+                decoder: {
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "upc_reader", "upc_e_reader", "code_93_reader"]
+                },
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log("Iniciado correctamente");
+                Quagga.start();
+            });
+
+            Quagga.onDetected(function(result) {
+                var codigoBarras = result.codeResult.code;
+                document.getElementById('codigo').value = codigoBarras; // Llena el campo de código con el resultado
+                Quagga.stop(); // Detiene el escaneo después de encontrar un código de barras
+            });
+        }
+
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/pwa/sw.js')  <!-- Ajusta la ruta aquí -->
+            navigator.serviceWorker.register('/pwa/sw.js')
             .then(function(registration) {
                 console.log('Service Worker registrado con éxito:', registration.scope);
             }).catch(function(error) {
