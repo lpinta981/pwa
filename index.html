@@ -18,9 +18,17 @@
     <script>
         function consultarProducto() {
             var codigo = document.getElementById('codigo').value;
-            google.script.run.withSuccessHandler(function(response) {
-                document.getElementById('resultado').textContent = "Producto: " + response.nombre + ", Precio: $" + response.precio;
-            }).buscarProducto(codigo);
+            var url = 'https://script.google.com/macros/s/AKfycbwk22E30GSqgjV-Ymrjwp11iu1B3Vg9GaZ0cn0ArFILD3Wjwzb5azK3bqtNWupNjYgb/exec?codigo=' + encodeURIComponent(codigo);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('resultado').textContent = "Producto: " + data.nombre + ", Precio: $" + data.precio;
+                })
+                .catch(error => {
+                    document.getElementById('resultado').textContent = "Error al consultar el producto.";
+                    console.error('Error:', error);
+                });
         }
     </script>
 </body>
