@@ -6,8 +6,7 @@ self.addEventListener('install', function(event) {
                 '/index.html',
                 '/styles.css',
                 '/manifest.json',
-                '/icon-192x192.png',
-                '/icon-512x512.png'
+                'https://i.postimg.cc/Gpk4qZx4/LOGO-MANA-SAKILLA-3.png'
             ]);
         })
     );
